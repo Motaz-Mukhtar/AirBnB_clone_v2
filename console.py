@@ -44,13 +44,16 @@ class HBNBCommand(cmd.Cmd):
 
             arg(list): list of all instances at __objects
         """
-
+        args = arg.split(' ')
         if not arg:
             print("** class name missing **")
-        elif arg not in HBNBCommand.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            new_model = eval(arg + "()")
+            new_model = eval(args[0] + "({})".format(", ".join(args[1: ])))
+            for key, value in new_model.__dict__.items():
+                if isinstance(value, str):
+                    new_model.__dict__[key] = value.replace('_', ' ')
             print(new_model.id)
             new_model.save()
 
@@ -72,10 +75,7 @@ class HBNBCommand(cmd.Cmd):
             instances = storage.all()
             key = arg_list[0] + "." + arg_list[1]
 
-            if key in instances:
-                print(instances[key])
-            else:
-                raise KeyError
+            print(storage._FileStorage__objects[key])
 
         except SyntaxError:
             print("** class name missing **")
