@@ -1,5 +1,7 @@
 -- prepare MySQL server
-
+-- Create hbnb_dev_db database
+-- create User hbnb_dev@localhost and Grant all privileges on the
+-- hbnb_test_db database and SELECT on performance_schema
 CREATE DATABASE IF NOT EXISTS `hbnb_dev_db`;
 
 CREATE USER
