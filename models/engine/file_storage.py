@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """ the storage engine """
 import json
-import os
 from models.base_model import BaseModel
 from models.user import User
 from models.amenity import Amenity
@@ -68,5 +67,6 @@ class FileStorage:
             not do anything
         """
         if obj is not None:
-            if obj in FileStorage.__objects:
-                del FileStorage.__objects[obj]
+            key = "{}.{}".format(obj.__name__, obj.id)
+            if key in FileStorage.__objects:
+                del FileStorage.__objects[key]
