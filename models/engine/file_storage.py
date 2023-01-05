@@ -69,4 +69,4 @@ class FileStorage:
         """
         if obj is not None:
             if obj in FileStorage.__objects:
-                del FileStroage.__objects[obj]
+                del FileStorage.__objects[obj]
