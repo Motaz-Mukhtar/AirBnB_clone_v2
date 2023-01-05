@@ -24,8 +24,10 @@ class FileStorage:
             return (self.__objects)
         else:
             my_dict = {}
+            if type(cls) == str:
+                cls = eval(cls)
             for key, value in self.__objects.items():
-                if cls in key:
+                if type(value) == cls:
                     my_dict[key] = value
             return my_dict
 
@@ -67,6 +69,6 @@ class FileStorage:
             not do anything
         """
         if obj is not None:
-            key = "{}.{}".format(obj.__name__, obj.id)
+            key = "{}.{}".format(type(obj).__name__, obj.id)
             if key in FileStorage.__objects:
                 del FileStorage.__objects[key]
