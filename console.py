@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This file contains the entry point of the command interpreter"""
 import cmd
+import models
 from models.base_model import BaseModel
 from models.user import User
 from models.amenity import Amenity
@@ -8,7 +9,6 @@ from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
-from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -38,6 +38,7 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ENTER will print emptyline.\n"""
         pass
+
 
     def do_create(self, arg):
         """Creates a new instance of BaseModel

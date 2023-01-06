@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Define DBStorage class """
 from os import getenv
-from models.base_model import BaseModel
 from models.base_model import Base
+from models.base_model import BaseModel
 from models.state import State
 from models.user import User
 from models.city import City
@@ -21,7 +21,7 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        """ create the engine self.__engine """
+        """ create the engine self.__engine and self.__session"""
         username = getenv("HBNB_MYSQL_USER")
         password = getenv("HBNB_MYSQL_PWD")
         host = getenv("HBNB_MYSQL_HOST")
@@ -42,6 +42,7 @@ class DBStorage:
             objects = self.__session.query(State).all()
             objects.extend(self.__session.query(City).all())
             objects.extend(self.__session.query(User).all())
+            objects.extend(self.__session.query(Place).all())
         else:
             if type(cls) == str:
                 cls = eval(cls)
@@ -62,6 +63,7 @@ class DBStorage:
             self.__session.delete(obj)
 
     def reload(self,):
+        """ create all talbes in the currnet database and new session """
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
