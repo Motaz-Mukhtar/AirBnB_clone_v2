@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Places class file """
 import models
+from os import getenv
 from models.base_model import BaseModel
 from models.base_model import Base
 from models.review import Review
@@ -27,11 +28,12 @@ class Place(BaseModel, Base):
     longitude = Column(Float)
     reviews = relationship("Review", backref="place", cascade="delete")
 
-    @property
-    def reviews(self):
-        review_list = []
+    if getenv("HBNB_TYPE_STORAGE", None) != "db":
+        @property
+        def reviews(self):
+            review_list = []
 
-        for review in list(models.storage.all(Review)):
-            if review.place_id == self.id:
-                review_list.append(review)
-        return review_list
+            for review in list(models.storage.all(Review).values()):
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review_list
