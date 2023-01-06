@@ -12,7 +12,7 @@ Base = declarative_base()
 
 
 class BaseModel:
-    """ Create the BaseMdel Class
+    """ Define BaseModel Class
 
       id Column: String(60) can't be null and it's primary key
       created_at Column: Datetime can't be null and the

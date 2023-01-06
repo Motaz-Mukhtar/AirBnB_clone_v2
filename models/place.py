@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Places class file """
+""" Place Class File """
 import models
 from os import getenv
 from models.base_model import BaseModel
@@ -23,7 +23,25 @@ place_amenity = Table('place_amenity', Base.metadata,
 )
 
 class Place(BaseModel, Base):
-    """ Places where user can search for services """
+    """ Define Place Class
+    
+        __tablename__: places
+        city_id: Column String(60) ForeignKey to cities.id can't be null
+        user_id: Column String(60) ForeignKey to users.id can't be null
+        name: Column String(128) can't be null
+        description: Column String(1024)
+        number_rooms: Column Integer can't be null and 0 by default
+        number_bathrooms: Column Integer can't be null and 0 by default
+        max_guest: Column Integer can't be null 0 by default
+        price_by_night: Column Integer can't be null 0 by default
+        latitude: Column Float
+        longitude: Column Float
+        reviews: relationship with Review, if the Place object
+                 is deleted all linked Review objects must be
+                 automatically deleted Also, the reference name is user
+        amenities: relationship with Amenity but also as secondary to
+                   place_amenity with option viewonly=False
+    """
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -42,6 +60,7 @@ class Place(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
         def reviews(self):
+            """Returns the list of Review with place_id"""
             review_list = []
 
             for review in list(models.storage.all(Review).values()):
@@ -51,6 +70,7 @@ class Place(BaseModel, Base):
 
         @property
         def amenities(self):
+            """ Returns the list of Amenity with amenity_ids """
             amenities_list = []
             for amenity in list(models.storage.all(Amenity).values()):
                 if amenity.amenity_ids == self.id:
@@ -58,5 +78,10 @@ class Place(BaseModel, Base):
             return amenities_list
         @amenities.setter
         def amenities(self, value):
+            """
+                amentities that handles append method for adding
+                Amenity.id to the attribute amenity_ids, this
+                method should accept only Amenity object.
+            """
             if type(value) == Amenity:
                 self.amenity_ids.append(value.id)
