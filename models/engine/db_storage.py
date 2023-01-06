@@ -43,6 +43,8 @@ class DBStorage:
             objects.extend(self.__session.query(City).all())
             objects.extend(self.__session.query(User).all())
             objects.extend(self.__session.query(Place).all())
+            objects.extend(self.__session.query(Review).all())
+            objects.extend(self.__session.query(Amenity).all())
         else:
             if type(cls) == str:
                 cls = eval(cls)

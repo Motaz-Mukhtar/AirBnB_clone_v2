@@ -5,13 +5,22 @@ from os import getenv
 from models.base_model import BaseModel
 from models.base_model import Base
 from models.review import Review
+from models.amenity import Amenity
 from sqlalchemy import Column
 from sqlalchemy import String
 from sqlalchemy import Integer
 from sqlalchemy import Float
+from sqlalchemy import Table
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
+
+place_amenity = Table('place_amenity', Base.metadata,
+        Column('place_id', String(60), ForeignKey('places.id'),
+               primary_key=True, nullable=False),
+        Column('amenity_id', String(60), ForeignKey('amenities.id'),
+               primary_key=True, nullable=False)
+)
 
 class Place(BaseModel, Base):
     """ Places where user can search for services """
@@ -27,6 +36,8 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship("Review", backref="place", cascade="delete")
+    amenities = relationship("Amenity", secondary="place_amenity",
+                             viewonly=False)
 
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
@@ -37,3 +48,15 @@ class Place(BaseModel, Base):
                 if review.place_id == self.id:
                     review_list.append(review)
             return review_list
+
+        @property
+        def amenities(self):
+            amenities_list = []
+            for amenity in list(models.storage.all(Amenity).values()):
+                if amenity.amenity_ids == self.id:
+                    amenities_list.append(amenity)
+            return amenities_list
+        @amenities.setter
+        def amenities(self, value):
+            if type(value) == Amenity:
+                self.amenity_ids.append(value.id)
