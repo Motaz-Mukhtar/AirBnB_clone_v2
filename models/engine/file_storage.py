@@ -38,11 +38,8 @@ class FileStorage:
             self.__objects[key] = instance
 
     def save(self):
-        s_dict = {}
-        s_dict.update(FileStorage.__objects)
-        with open(FileStorage.__file_path, 'w', encoding="utf-8") as f:
-            for key, value in s_dict.items():
-                s_dict[key] = value.to_dict()
+        s_dict = {i: self.__objects[i].to_dict() for i in self.__objects.key()}
+        with open(self.__file_path, 'w', encoding="utf-8") as f:
             json.dump(s_dict, f)
 
     def reload(self):
