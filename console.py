@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This file contains the entry point of the command interpreter"""
 import cmd
-import models
+from models import storage
 from models.base_model import BaseModel
 from models.user import User
 from models.amenity import Amenity
@@ -54,7 +54,7 @@ class HBNBCommand(cmd.Cmd):
             new_model = eval(args[0] + "({})".format(", ".join(args[1: ])))
             for key, value in new_model.__dict__.items():
                 if isinstance(value, str):
-                    new_model.__dict__[key] = value.replace('_', ' ')
+                    new_model.__dict__[key] = value.strip('"').replace("_", " ")
             print(new_model.id)
             new_model.save()
 
