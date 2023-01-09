@@ -36,39 +36,41 @@ class TestDBStorage(unittest.TestCase):
             cls.storage._DBStorage__session.add(cls.state)
             cls.city = City(name="NYC", state_id=cls.state.id)
             cls.storage._DBStorage__session.add(cls.city)
-            cls.amenity = Amenity(name="Wifi")
-            cls.storage._DBStorage__session.add(cls.amenity)
             cls.place = Place(city_id=cls.city.id,
                               user_id=cls.user.id, name="Washinton",
                               number_rooms=3, number_bathrooms=2, max_guest=12,
                               price_by_night=200)
             cls.storage._DBStorage__session.add(cls.place)
-            cls.review = Review("Reviews", place_id=cls.place.id,
+            cls.amenity = Amenity(name="Wifi")
+            cls.storage._DBStorage__session.add(cls.amenity)
+            cls.review = Review(text="Reviews", place_id=cls.place.id,
                                 user_id=cls.user.id)
+            cls.storage._DBStorage__session.add(cls.review)
             cls.storage._DBStorage__session.commit()
 
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
         """ tearDownClass fucntion """
         if type(models.storage) == DBStorage:
-            self.storage._DBStorage__session.delete(self.user)
-            self.storage._DBStorage__session.delete(self.city)
-            self.storage._DBStorage__session.delete(self.review)
-            self.storage._DBStorage__session.delete(self.place)
-            self.storage._DBStorage__session.delete(self.amenity)
-            self.storage._DBStorage__session.delete(self.state)
-            self.storage._DBStorage__session.commit()
+            cls.storage._DBStorage__session.delete(cls.state)
+            cls.storage._DBStorage__session.delete(cls.city)
+            cls.storage._DBStorage__session.delete(cls.amenity)
+            cls.storage._DBStorage__session.delete(cls.user)
+            cls.storage._DBStorage__session.delete(cls.review)
+            cls.storage._DBStorage__session.delete(cls.place)
+            cls.storage._DBStorage__session.commit()
 
-            del self.user
-            del self.city
-            del self.place
-            del self.amenity
-            del self.state
-            del self.storage
+            del cls.state
+            del cls.city
+            del cls.amenity
+            del cls.user
+            del cls.review
+            del cls.place
+            del cls.storage
 
     def test_pep8(self):
         """ test pep8 style """
-        style =  pep8.StyleGuide(quit=True)
+        style = pep8.StyleGuide(quit=True)
         f = style.check_files(['models/engine/db_storage.py'])
         self.assertEqual(f.total_errors, 0, "fix pep8")
 
@@ -84,8 +86,8 @@ class TestDBStorage(unittest.TestCase):
 
     def test_attributes(self):
         """ Check Attributes """
-        self.assertTrue(self.assertIsInstance(self.storage._DBStorage__session, Session))
-        self.assertTrue(self.assertIsInstance(self.storage._DBStorage__engine, Engine))
+        self.assertTrue(isinstance(self.storage._DBStorage__session, Session))
+        self.assertTrue(isinstance(self.storage._DBStorage__engine, Engine))
 
     @unittest.skipIf(type(models.storage) == FileStorage,
                      "Test Engine FileStorage")
@@ -97,8 +99,6 @@ class TestDBStorage(unittest.TestCase):
         self.assertTrue(hasattr(DBStorage, "new"))
         self.assertTrue(hasattr(DBStorage, "reload"))
         self.assertTrue(hasattr(DBStorage, "save"))
-        self.assertTrue(hasattr(DBStorage, "engine"))
-        self.assertTrue(hasattr(DBStorage, "session"))
 
     @unittest.skipIf(type(models.storage) == FileStorage,
                      "Test Engine FileStorage")
@@ -122,9 +122,9 @@ class TestDBStorage(unittest.TestCase):
     def test_new(self):
         """ Test new() method """
         state = State(name="California")
-        new = self.storage.new(state)
-        st = self.storage._DBStorage__session.new
-        self.assertEqaul(new, st)
+        self.storage.new(state)
+        st = list(self.storage._DBStorage__session.new)
+        self.assertIn(state, st)
 
     @unittest.skipIf(type(models.storage) == FileStorage,
                      "Test Engine FileStorage")
@@ -138,10 +138,9 @@ class TestDBStorage(unittest.TestCase):
         db = getenv("HBNB_MYSQL_DB")
         con = MySQLdb.connect(user=username, passwd=password, db=db)
         cursor = con.cursor()
-        fetch = cursor.execute("SELET * FROM states\
-                               WHERE BINARY name='Gorgia'")
-        query = fetch.fetchall()
-        self.assertEqual(len(state), 1)
+        cursor.execute("SELECT * FROM states WHERE name = 'Gorgia'")
+        query = cursor.fetchall()
+        self.assertEqual(len(query), 1)
         self.assertEqual(state.id, query[0][0])
 
     @unittest.skipIf(type(models.storage) == FileStorage,
@@ -149,9 +148,9 @@ class TestDBStorage(unittest.TestCase):
     def test_delete(self):
         """ Test delete() method """
         state = State(name="Gorgia")
-        self.storage._DBStorage.__session.add(state)
-        self.storage.save()
-        self.storage._DBStorage.__session.delete(state)
+        self.storage._DBStorage__session.add(state)
+        self.storage._DBStorage__session.commit()
+        self.storage.delete(state)
         self.assertIn(state, list(self.storage._DBStorage__session.deleted))
 
     @unittest.skipIf(type(models.storage) == FileStorage,
@@ -160,8 +159,8 @@ class TestDBStorage(unittest.TestCase):
         """ Test reload() method """
         curr_session = self.storage._DBStorage__session
         self.storage.reload()
-        self.assertIsinstance(self.storage._DBStorage__session, Session)
-        self.assertNotEqaul(self.storage._DBStorage__session, curr_session)
+        self.assertIsInstance(self.storage._DBStorage__session, Session)
+        self.assertNotEqual(self.storage._DBStorage__session, curr_session)
         self.storage.__DBStorage__session = curr_session
 
 

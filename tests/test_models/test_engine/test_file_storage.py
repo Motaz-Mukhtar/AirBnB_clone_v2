@@ -151,7 +151,8 @@ class Test_FileStorage(unittest.TestCase):
         key = "{}.{}".format(type(model).__name__, model.id)
         FileStorage._FileStorage__objects[key] = model
         self.storage.delete(model)
-        self.assertNotIn("BaseModel." + model.id, FileStorage._FileStorage__objects)
+        self.assertNotIn("BaseModel." + model.id,
+                         FileStorage._FileStorage__objects)
 
     def test_delete_nonexistant(self):
         try:
