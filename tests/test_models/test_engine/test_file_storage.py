@@ -77,8 +77,8 @@ class Test_FileStorage(unittest.TestCase):
 
     def test_attribute(self):
         """ Check Attributes """
-        self.assertEqual(type(FileStorage.__file_path), str)
-        self.assertEqual(type(FileStorage.__objects), dict)
+        self.assertEqual(type(FileStorage._FileStorage__file_path), str)
+        self.assertEqual(type(FileStorage._FileStorage__objects), dict)
 
     def test_methods(self):
         """ Check Methods """
@@ -97,14 +97,14 @@ class Test_FileStorage(unittest.TestCase):
         """ Test all() method """
         objs = self.storage.all()
         self.assertEqual(type(objs), dict)
-        self.assertIn(objs, FileStorage._FileStorage__objects)
+        self.assertIs(objs, FileStorage._FileStorage__objects)
         self.assertEqual(len(objs), 7)
 
     def test_all_obj(self):
         """ Test all(obj) method """
-        objs = self.storage.all(State)
+        objs = self.storage.all(BaseModel)
         self.assertEqual(type(objs), dict)
-        self.assertEqual(self.state, list(objs.values())[0])
+        self.assertEqual(self.base, list(objs.values())[0])
         self.assertEqual(len(objs), 1)
 
     def test_new(self):

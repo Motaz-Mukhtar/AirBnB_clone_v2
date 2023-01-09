@@ -38,6 +38,7 @@ class FileStorage:
             self.__objects[key] = instance
 
     def save(self):
+        """ Save the Instances at file.json """
         s_dict = {i: self.__objects[i].to_dict()
                   for i in self.__objects.keys()}
         with open(self.__file_path, 'w', encoding="utf-8") as f:
