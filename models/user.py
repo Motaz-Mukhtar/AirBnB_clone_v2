@@ -6,6 +6,7 @@ from sqlalchemy import Column
 from sqlalchemy import String
 from sqlalchemy.orm import relationship
 
+
 class User(BaseModel, Base):
     """ Define User Class
 
@@ -15,7 +16,7 @@ class User(BaseModel, Base):
         first_name: Column String(128) can be null
         last_name: Column String(128) can be null
         places: relationship with Place, if the User object
-                deleted all linked Place object must be 
+                deleted all linked Place object must be
                 automatically delted, and the reference name is user
         reviews: relationship with Review, if the User object
                  deleted all linked Review object must be deleted

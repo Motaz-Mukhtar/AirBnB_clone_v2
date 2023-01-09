@@ -16,15 +16,17 @@ from sqlalchemy.orm import relationship
 
 
 place_amenity = Table('place_amenity', Base.metadata,
-        Column('place_id', String(60), ForeignKey('places.id'),
-               primary_key=True, nullable=False),
-        Column('amenity_id', String(60), ForeignKey('amenities.id'),
-               primary_key=True, nullable=False)
-)
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False))
+
 
 class Place(BaseModel, Base):
     """ Define Place Class
-    
+
         __tablename__: places
         city_id: Column String(60) ForeignKey to cities.id can't be null
         user_id: Column String(60) ForeignKey to users.id can't be null
@@ -76,6 +78,7 @@ class Place(BaseModel, Base):
                 if amenity.amenity_ids == self.id:
                     amenities_list.append(amenity)
             return amenities_list
+
         @amenities.setter
         def amenities(self, value):
             """

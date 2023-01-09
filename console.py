@@ -39,11 +39,10 @@ class HBNBCommand(cmd.Cmd):
         """ENTER will print emptyline.\n"""
         pass
 
-
     def do_create(self, arg):
         """Creates a new instance of BaseModel
 
-            arg(list): list of all instances at __objects
+           arg(list): list of all instances at __objects
         """
         args = arg.split(' ')
         if not arg:
@@ -51,10 +50,11 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            new_model = eval(args[0] + "({})".format(", ".join(args[1: ])))
+            new_model = eval(args[0] + "({})".format(", ".join(args[1:])))
             for key, value in new_model.__dict__.items():
                 if isinstance(value, str):
-                    new_model.__dict__[key] = value.strip('"').replace("_", " ")
+                    new_model.__dict__[key] = value.strip('"').
+                    replace("_", " ")
             print(new_model.id)
             new_model.save()
 
