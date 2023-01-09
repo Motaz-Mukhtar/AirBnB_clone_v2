@@ -66,10 +66,16 @@ class TestDBStorage(unittest.TestCase):
             del self.state
             del self.storage
 
+    def test_pep8(self):
+        """ test pep8 style """
+        style =  pep8.StyleGuide(quit=True)
+        f = style.check_files(['models/engine/db_storage.py'])
+        self.assertEqual(f.total_errors, 0, "fix pep8")
+
     def test_docstring(self):
-        """ Test dcostring """
+        """ Check for docstring """
         self.assertIsNotNone(DBStorage.__doc__)
-        self.assertIsNotNone(DBStorage.__init__)
+        self.assertIsNotNone(DBStorage.__init__.__doc__)
         self.assertIsNotNone(DBStorage.all.__doc__)
         self.assertIsNotNone(DBStorage.delete.__doc__)
         self.assertIsNotNone(DBStorage.new.__doc__)
@@ -77,7 +83,15 @@ class TestDBStorage(unittest.TestCase):
         self.assertIsNotNone(DBStorage.save.__doc__)
 
     def test_attributes(self):
-        """ Test attributes existent """
+        """ Check Attributes """
+        self.assertTrue(self.assertIsInstance(self.storage._DBStorage__session, Session))
+        self.assertTrue(self.assertIsInstance(self.storage._DBStorage__engine, Engine))
+
+    @unittest.skipIf(type(models.storage) == FileStorage,
+                     "Test Engine FileStorage")
+    def test_methods(self):
+        """ Check Methods """
+        self.assertTrue(hasattr(DBStorage, "__init__"))
         self.assertTrue(hasattr(DBStorage, "all"))
         self.assertTrue(hasattr(DBStorage, "delete"))
         self.assertTrue(hasattr(DBStorage, "new"))
@@ -124,7 +138,7 @@ class TestDBStorage(unittest.TestCase):
         db = getenv("HBNB_MYSQL_DB")
         con = MySQLdb.connect(user=username, passwd=password, db=db)
         cursor = con.cursor()
-        fetch = curosr.execute("SELET * FROM states\
+        fetch = cursor.execute("SELET * FROM states\
                                WHERE BINARY name='Gorgia'")
         query = fetch.fetchall()
         self.assertEqual(len(state), 1)
@@ -138,7 +152,7 @@ class TestDBStorage(unittest.TestCase):
         self.storage._DBStorage.__session.add(state)
         self.storage.save()
         self.storage._DBStorage.__session.delete(state)
-        assertIn(st, list(self.storage._DBStorage__session.deleted))
+        self.assertIn(state, list(self.storage._DBStorage__session.deleted))
 
     @unittest.skipIf(type(models.storage) == FileStorage,
                      "Test Engine FileStorage")
