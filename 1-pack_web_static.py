@@ -10,18 +10,18 @@ from Fabric.api import local
 
 
 def do_pack():
-	""" All Files in the folder web_static 
-	    will be added to the final archive"""
-	date = datetime.utcnow()
-	f = "versions/web_static_{}{}{}{}{}".format(date.year,
-						    date.month,
-						    date.hour,
-						    date.minute
-						    date.second)
-	if os.path.isfile("versions") is False:
-		if local("mkdir -p versions").fails is True:
-			return None
-	if local("tar -cvzf {} web_static".format(f)).fails is True:
-		return None
-
-	return f
+    """ All Files in the folder web_static
+        will be added to the final archive"""
+    date = datetime.utcnow()
+    f = "versions/web_static_{}{}{}{}{}{}".format(date.year,
+                                                  date.month,
+                                                  date.day,
+                                                  date.hour,
+                                                  date.minute,
+                                                  date.second)
+    if os.path.isfile("versions") is False:
+        if local("mkdir -p versions").fails is True:
+            return None
+    if local("tar -cvzf {} web_static".format(f)).fails is True:
+        return None
+    return f
