@@ -53,7 +53,7 @@ class HBNBCommand(cmd.Cmd):
             new_model = eval(args[0] + "({})".format(", ".join(args[1:])))
             for key, value in new_model.__dict__.items():
                 if isinstance(value, str):
-                    new_model.__dict__[key] = value.strip('"').
+                    new_model.__dict__[key] = value.strip('"').\
                     replace("_", " ")
             print(new_model.id)
             new_model.save()
