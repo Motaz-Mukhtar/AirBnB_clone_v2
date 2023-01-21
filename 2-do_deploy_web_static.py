@@ -7,8 +7,13 @@
 import os.path
 from datetime import datetime
 from fabric.api import local
+from fabric.api import run
+from fabric.api import env
+from fabric.api import put
 
 
+env.user = 'ubuntu'
+env.hosts = ['54.210.177.146', '54.209.56.145']
 def do_pack():
     """ All Files in the folder web_static
         will be added to the final archive"""
@@ -25,3 +30,18 @@ def do_pack():
     if local("tar -cvzf {} web_static".format(f)).fails is True:
         return None
     return f
+
+def do_deploy(archive_path):
+    """
+        Distributes an archive to the web servers
+    """
+    if archive_path is None:
+        return False
+    file = archive_path.split('/')[-1]
+    file_name = file.split('.')[0]
+    put(archive_path, '/tmp/')
+    run("tar -xzf {} -C /data/web_static/releases".format(file, name))
+    run("rm -r /tmp/{}".format(file))
+    run("rm -rf /data/web_static/currnet")
+    run("ln -sF /data/web_static/releases/{} /data/web_static/current".format(name))
+    return True
