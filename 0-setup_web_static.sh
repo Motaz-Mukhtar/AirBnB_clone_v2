@@ -38,7 +38,6 @@ printf %s " server {
                 root /etc/nginx/html;
                 internal;
         }
-        add_header X-Served-By "$HOSTNAME";
-}
-" > /etc/nginx/sites-available/default
+        add_header X-Served-By '$HOSTNAME';
+}" > /etc/nginx/sites-available/default
 service nginx restart
