@@ -13,19 +13,15 @@ def do_pack():
     """ All Files in the folder web_static
         will be added to the final archive"""
     date = datetime.utcnow()
-    f = "versions/web_static_{}{}{}{}{}{}".format(date.year,
-                                                  date.month,
-                                                  date.day,
-                                                  date.hour,
-                                                  date.minute,
-                                                  date.second)
+    f = "versions/web_static_{}{}{}{}{}{}.tgz".format(date.year,
+                                                      date.month,
+                                                      date.day,
+                                                      date.hour,
+                                                      date.minute,
+                                                      date.second)
     if os.path.isfile("versions") is False:
         if local("mkdir -p versions") is False:
             return None
-        else:
-            local("mkdir -p versions")
     if local("tar -cvzf {} web_static".format(f)) is False:
         return None
-    else:
-        local("tar -cvzf {} web_static".format(f))
     return f
