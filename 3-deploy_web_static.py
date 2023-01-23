@@ -24,9 +24,9 @@ def do_pack():
                                                       date.minute,
                                                       date.second)
     if os.path.isfile("versions") is False:
-        if local("mkdir -p versions").fails is True:
+        if local("mkdir -p versions") is True:
             return None
-    if local("tar -cvzf {} web_static".format(f)).fails is True:
+    if local("tar -cvzf {} web_static".format(f)) is True:
         return None
     return f
 
@@ -69,7 +69,7 @@ def deploy():
         Creates and destributes an archive to your web servers
     """
     file = do_pack()
-    if file is not None:
+    if file is None:
         return False
 
     value = do_deploy(file)
