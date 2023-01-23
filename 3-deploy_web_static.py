@@ -10,9 +10,10 @@ from fabric.api import local
 from fabric.api import run
 from fabric.api import env
 from fabric.api import put
+
+
+env.user = 'ubuntu'
 env.hosts = ['54.210.177.146', '54.209.56.145']
-
-
 def do_pack():
     """ All Files in the folder web_static
         will be added to the final archive"""
@@ -30,7 +31,6 @@ def do_pack():
         return None
     return f
 
-
 def do_deploy(archive_path):
     """
         Distributes an archive to the web servers
@@ -39,26 +39,9 @@ def do_deploy(archive_path):
         return False
     file = archive_path.split('/')[-1]
     file_name = file.split('.')[0]
-    if put(archive_path, '/tmp/{}'.format(file)) is False:
-        return False
-    if run("mkdir -p /data/web_static/releases/{}".
-            format(file_name)) is False:
-        return False
-    if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}".
-            format(file, file_name)) is False:
-        return False
-    if run("rm -r /tmp/{}".format(file)) is False:
-        return False
-    if run("mv /data/web_static/releases/{}/web_static/* "
-            "/data/web_static/releases/{}/".
-            format(file_name, file_name)) is False:
-        return False
-    if run("rm -rf /data/web_static/releases/{}/web_static".
-            format(file_name)) is False:
-        return False
-    if run("rm -rf /data/web_static/current") is False:
-        return False
-    if run("ln -s /data/web_static/releases/{} /data/web_static/current".
-            format(file_name)) is False:
-        return False
+    put(archive_path, '/tmp/{}'.format(file))
+    run("tar -xzf /tmp/{} -C /data/web_static/releases/{}".format(file, file_name))
+    run("rm -r /tmp/{}".format(file))
+    run("rm -rf /data/web_static/current")
+    run("ln -sF /data/web_static/releases/{} /data/web_static/current".format(file_name))
     return True
