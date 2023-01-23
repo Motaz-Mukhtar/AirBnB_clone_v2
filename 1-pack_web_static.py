@@ -23,7 +23,7 @@ def do_pack():
         if local("mkdir -p versions") is False:
             return None
         else:
-            local("mkdir -p verions")
+            local("mkdir -p versions")
     if local("tar -cvzf {} web_static".format(f)) is False:
         return None
     else:
