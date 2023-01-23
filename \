@@ -27,5 +27,5 @@ def do_pack():
     if local("tar -cvzf {} web_static".format(f)) is False:
         return None
     else:
-        local("tar -cvzf {} web_static".format(f))
+        local("tar -cvzf {} web_static".forma(f))
     return f
