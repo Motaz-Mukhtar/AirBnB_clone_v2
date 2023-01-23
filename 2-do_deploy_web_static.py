@@ -18,12 +18,12 @@ def do_pack():
     """ All Files in the folder web_static
         will be added to the final archive"""
     date = datetime.utcnow()
-    f = "versions/web_static_{}{}{}{}{}{}".format(date.year,
-                                                  date.month,
-                                                  date.day,
-                                                  date.hour,
-                                                  date.minute,
-                                                  date.second)
+    f = "versions/web_static_{}{}{}{}{}{}.tgz".format(date.year,
+                                                      date.month,
+                                                      date.day,
+                                                      date.hour,
+                                                      date.minute,
+                                                      date.second)
     if os.path.isfile("versions") is False:
         if local("mkdir -p versions").fails is True:
             return None
@@ -39,9 +39,9 @@ def do_deploy(archive_path):
         return False
     file = archive_path.split('/')[-1]
     file_name = file.split('.')[0]
-    put(archive_path, '/tmp/')
-    run("tar -xzf {} -C /data/web_static/releases".format(file, name))
+    put(archive_path, '/tmp/{}'.format(file))
+    run("tar -xzf /tmp/{} -C /data/web_static/releases/{}".format(file, file_name))
     run("rm -r /tmp/{}".format(file))
-    run("rm -rf /data/web_static/currnet")
-    run("ln -sF /data/web_static/releases/{} /data/web_static/current".format(name))
+    run("rm -rf /data/web_static/current")
+    run("ln -sF /data/web_static/releases/{} /data/web_static/current".format(file_name))
     return True
