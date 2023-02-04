@@ -12,6 +12,7 @@ def root():
     """ return Hello "HBNB!" at / """
     return "Hello HBNB!"
 
+
 @app.route('/hbnb')
 def hbnb():
     """ return "HBNB" at /hbnb  """
