@@ -67,4 +67,5 @@ class BaseModel:
         """Return Representation of the
             Ojbect [<class name>] (<self.id>) <self.__dict__>"""
         c = self.__dict__.copy()
+        c.pop("_sa_instance_state", None)
         return "[{}] ({}) {}".format(type(self).__name__, self.id, c)

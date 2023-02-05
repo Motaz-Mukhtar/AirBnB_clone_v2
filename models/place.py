@@ -75,7 +75,7 @@ class Place(BaseModel, Base):
             """ Returns the list of Amenity with amenity_ids """
             amenities_list = []
             for amenity in list(models.storage.all(Amenity).values()):
-                if amenity.amenity_ids == self.id:
+                if amenity.id == self.id:
                     amenities_list.append(amenity)
             return amenities_list
 
