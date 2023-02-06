@@ -50,9 +50,6 @@ class DBStorage:
             objects.extend(self.__session.query(Place).all())
             objects.extend(self.__session.query(Review).all())
             objects.extend(self.__session.query(Amenity).all())
-            print("\n \n \n \n ")
-            print(objects)
-            print("\n \n \n")
         else:
             if type(cls) == str:
                 cls = eval(cls)
