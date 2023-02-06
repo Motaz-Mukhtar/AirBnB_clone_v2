@@ -65,6 +65,7 @@
 
 .container .filters div .popover
 {
+    display: none;
     overflow: scroll;
     position: relative;
     top: 37px;
@@ -73,6 +74,12 @@
     width: 100%;
     border: #DDDDDD 1px solid;
     border-radius: 4px;
+}
+
+.container .filters .locations:hover .popover,
+.container .filters .amenities:hover .popover
+{
+    display: block;
 }
 
 .container .filters div .popover ul
