@@ -14,6 +14,7 @@ def states():
     states = storage.all("State")
     return render_template("9-states.html", states=states)
 
+
 @app.route("/states/<id>", strict_slashes=False)
 def state_id(id):
     """ list City objects liked to the State """
@@ -24,6 +25,7 @@ def state_id(id):
             break
         state = 0
     return render_template("9-states.html", state=state)
+
 
 @app.teardown_appcontext
 def teardown(se):
