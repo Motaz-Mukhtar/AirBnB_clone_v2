@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Start Flask Web Application """
+""" Start Flask Web Application, listen in 0.0.0.0 port 5000"""
 from flask import Flask
 from flask import render_template
 from models import storage
@@ -14,7 +14,7 @@ def hbnb_filters():
     states = storage.all("State")
     cities = storage.all("City")
     amenities = storage.all("Amenity")
-    return render_template("10-hbnb_filters.html", states=states
+    return render_template("10-hbnb_filters.html", states=states,
                             cities=cities, amenities=amenities)
 
 
