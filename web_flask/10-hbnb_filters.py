@@ -12,10 +12,9 @@ app = Flask(__name__)
 def hbnb_filters():
     """ Load State, City and Amentiy objects from DBStorage """
     states = storage.all("State")
-    cities = storage.all("City")
     amenities = storage.all("Amenity")
     return render_template("10-hbnb_filters.html", states=states,
-                            cities=cities, amenities=amenities)
+                            amenities=amenities)
 
 
 @app.teardown_appcontext
